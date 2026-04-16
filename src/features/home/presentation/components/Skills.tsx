@@ -1,8 +1,11 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { MdOutlineDesignServices } from "react-icons/md";
 import { RiMovie2Line } from "react-icons/ri";
+
+const easeInOut = [0.42, 0, 0.58, 1] as const;
 
 const skillCards = [
   {
@@ -27,6 +30,7 @@ const skillCards = [
 
 export default function Skills() {
   const isDarkMode = false;
+  const reduceMotion = useReducedMotion();
   const cardClassName = isDarkMode
     ? "rounded-sm bg-zinc-900 p-6"
     : "rounded-sm bg-white p-6";
@@ -34,27 +38,69 @@ export default function Skills() {
     ? "0px 4px 60px 0px rgba(0, 0, 0, 0.45)"
     : "0px 4px 60px 0px #0000001A";
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: 14 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: reduceMotion ? 0 : 0.55,
+        ease: easeInOut,
+        staggerChildren: reduceMotion ? 0 : 0.12,
+        delayChildren: reduceMotion ? 0 : 0.06,
+      },
+    },
+  } as const;
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 12, filter: "blur(6px)" },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: reduceMotion ? 0 : 0.45,
+        ease: easeInOut,
+      },
+    },
+  } as const;
+
   return (
     <section
       className={`${isDarkMode ? "bg-dark text-white" : "bg-white text-black"}`}
       aria-labelledby="skills-heading"
     >
-      <div className="mx-auto max-w-7xl px-5 pt-8 pb-20 sm:px-8 lg:px-12">
-        <p className="text-sm font-semibold text-primary">Skills</p>
-        <h2
+      <motion.div
+        className="mx-auto max-w-7xl px-5 pt-8 pb-20 sm:px-8 lg:px-12"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+        variants={containerVariants}
+      >
+        <motion.p className="text-sm font-semibold text-primary" variants={itemVariants}>
+          Skills
+        </motion.p>
+        <motion.h2
           id="skills-heading"
           className="mt-2 text-2xl font-bold tracking-tight text-primary sm:text-4xl"
           style={{ fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}
+          variants={itemVariants}
         >
           My Expertise
-        </h2>
+        </motion.h2>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+          variants={containerVariants}
+        >
           {skillCards.map(({ title, description, Icon }) => (
-            <article
+            <motion.article
               key={title}
               className={cardClassName}
               style={{ boxShadow: cardShadow }}
+              variants={itemVariants}
+              whileHover={reduceMotion ? undefined : { y: -4, scale: 1.01 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.99 }}
             >
               <div className="inline-flex h-11 w-11 items-center justify-center rounded-sm bg-primary text-white">
                 <Icon className="h-6 w-6" aria-hidden />
@@ -73,10 +119,10 @@ export default function Skills() {
               >
                 {description}
               </p>
-            </article>
+            </motion.article>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

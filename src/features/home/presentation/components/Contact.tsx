@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { useForm } from "react-hook-form";
 
 type ContactFormValues = {
@@ -12,9 +13,11 @@ type ContactFormValues = {
 };
 
 const RECIPIENT_EMAIL = "";
+const easeInOut = [0.42, 0, 0.58, 1] as const;
 
 export default function Contact() {
   const isDarkMode = false;
+  const reduceMotion = useReducedMotion();
   const sectionClassName = isDarkMode ? "bg-dark text-white" : "bg-white text-black";
   const inputClassName = isDarkMode
     ? "h-11 w-full rounded-sm border border-[#5E3BEE66] bg-zinc-900 px-3 outline-none transition focus:border-primary"
@@ -23,6 +26,29 @@ export default function Contact() {
     ? "w-full resize-none rounded-sm border border-[#5E3BEE66] bg-zinc-900 px-3 py-2 outline-none transition focus:border-primary"
     : "w-full resize-none rounded-sm border border-[#5E3BEE66] bg-white px-3 py-2 outline-none transition focus:border-primary";
   const mutedTextClassName = isDarkMode ? "text-zinc-300" : "text-zinc-700";
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 16 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: reduceMotion ? 0 : 0.55,
+        ease: easeInOut,
+        staggerChildren: reduceMotion ? 0 : 0.1,
+        delayChildren: reduceMotion ? 0 : 0.05,
+      },
+    },
+  } as const;
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: reduceMotion ? 0 : 0.4, ease: easeInOut },
+    },
+  } as const;
 
   const {
     register,
@@ -61,22 +87,32 @@ export default function Contact() {
 
   return (
     <section id="contact" className={`${sectionClassName} px-5 py-14 sm:px-8 lg:px-12`}>
-      <div className="mx-auto max-w-4xl">
-        <p className="text-center text-sm font-semibold text-primary">Get In Touch</p>
-        <h2
+      <motion.div
+        className="mx-auto max-w-4xl"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionVariants}
+      >
+        <motion.p className="text-center text-sm font-semibold text-primary" variants={itemVariants}>
+          Get In Touch
+        </motion.p>
+        <motion.h2
           className="mt-2 text-center text-3xl font-bold tracking-tight text-primary sm:text-5xl"
           style={{ fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}
+          variants={itemVariants}
         >
           Contact me
-        </h2>
+        </motion.h2>
 
-        <form
+        <motion.form
           className="mx-auto mt-10 max-w-[820px] space-y-4"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
+          variants={itemVariants}
         >
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <motion.div className="grid gap-3 sm:grid-cols-2" variants={itemVariants}>
+            <motion.div className="space-y-1.5" variants={itemVariants}>
               <label htmlFor="firstName" className="text-sm font-medium">
                 First name
               </label>
@@ -89,9 +125,9 @@ export default function Contact() {
               {errors.firstName && (
                 <p className="text-xs text-red-600">{errors.firstName.message}</p>
               )}
-            </div>
+            </motion.div>
 
-            <div className="space-y-1.5">
+            <motion.div className="space-y-1.5" variants={itemVariants}>
               <label htmlFor="lastName" className="text-sm font-medium">
                 Last name
               </label>
@@ -104,11 +140,11 @@ export default function Contact() {
               {errors.lastName && (
                 <p className="text-xs text-red-600">{errors.lastName.message}</p>
               )}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="space-y-1.5">
+          <motion.div className="grid gap-3 sm:grid-cols-2" variants={itemVariants}>
+            <motion.div className="space-y-1.5" variants={itemVariants}>
               <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
@@ -125,9 +161,9 @@ export default function Contact() {
                 })}
               />
               {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
-            </div>
+            </motion.div>
 
-            <div className="space-y-1.5">
+            <motion.div className="space-y-1.5" variants={itemVariants}>
               <label htmlFor="phoneNumber" className="text-sm font-medium">
                 Phone number
               </label>
@@ -137,10 +173,10 @@ export default function Contact() {
                 className={inputClassName}
                 {...register("phoneNumber")}
               />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="space-y-1.5">
+          <motion.div className="space-y-1.5" variants={itemVariants}>
             <label htmlFor="message" className="text-sm font-medium">
               Message
             </label>
@@ -158,9 +194,9 @@ export default function Contact() {
               })}
             />
             {errors.message && <p className="text-xs text-red-600">{errors.message.message}</p>}
-          </div>
+          </motion.div>
 
-          <div className="space-y-1">
+          <motion.div className="space-y-1" variants={itemVariants}>
             <label className={`inline-flex items-center gap-2 text-xs sm:text-sm ${mutedTextClassName}`}>
               <input
                 type="checkbox"
@@ -174,18 +210,20 @@ export default function Contact() {
             {errors.acceptTerms && (
               <p className="text-xs text-red-600">{errors.acceptTerms.message}</p>
             )}
-          </div>
+          </motion.div>
 
-          <div className="pt-2 text-center">
-            <button
+          <motion.div className="pt-2 text-center" variants={itemVariants}>
+            <motion.button
               type="submit"
               className="inline-flex min-h-10 items-center justify-center rounded-md bg-primary px-7 py-2 text-sm font-semibold text-white transition hover:bg-[#4b2dca] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
             >
               Submit
-            </button>
-          </div>
-        </form>
-      </div>
+            </motion.button>
+          </motion.div>
+        </motion.form>
+      </motion.div>
     </section>
   );
 }

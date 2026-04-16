@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Constants } from "@/general/constans";
 import heroProf from "@/asset/hero-img.png";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const easeInOut = [0.42, 0, 0.58, 1] as const;
 
 export default function Hero() {
   const isDarkMode = false;
+  const reduceMotion = useReducedMotion();
   return (
     <section
       className={`relative overflow-hidden ${isDarkMode ? "bg-dark text-white" : "bg-white text-black"
@@ -19,21 +20,30 @@ export default function Hero() {
         <motion.div
           className="flex max-w-xl flex-col gap-6 lg:gap-5"
           initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: reduceMotion ? 0 : 0.55, ease: easeInOut }}
           style={{
             fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
           }}
         >
-          <p
+          <motion.p
             className="text-xs font-bold uppercase tracking-[0.2em]  sm:text-sm"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: reduceMotion ? 0 : 0.4, ease: easeInOut, delay: reduceMotion ? 0 : 0.06 }}
           >
             Hey, I am Mohammed Midilaj
-          </p>
+          </motion.p>
 
-          <h1
+          <motion.h1
             id="hero-heading"
             className="text-[clamp(1.75rem,4vw,2.75rem)] font-normal leading-[1.15] tracking-tight"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: reduceMotion ? 0 : 0.45, ease: easeInOut, delay: reduceMotion ? 0 : 0.1 }}
           >
             <span className="font- text-primary uppercase">
               UI/UX Designer
@@ -41,14 +51,26 @@ export default function Hero() {
             <span className="">
               crafting user-centered digital products and brand experiences.
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="max-w-md text-base leading-relaxed  sm:text-lg">
+          <motion.p
+            className="max-w-md text-base leading-relaxed  sm:text-lg"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: reduceMotion ? 0 : 0.42, ease: easeInOut, delay: reduceMotion ? 0 : 0.14 }}
+          >
             I help startups and businesses turn ideas into intuitive, visually
             engaging digital experiences through thoughtful UI/UX design.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <motion.div
+            className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: reduceMotion ? 0 : 0.4, ease: easeInOut, delay: reduceMotion ? 0 : 0.18 }}
+          >
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href={Constants.GET_STARTED_LINK}
@@ -65,14 +87,15 @@ export default function Hero() {
                 Download CV
               </a>
             </motion.div>
-          </div>
+          </motion.div>
         </motion.div>
 
         <motion.div
           className="relative mx-auto flex w-full justify-center lg:mx-0 lg:max-w-none lg:justify-end"
           initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease, delay: 0.08 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: reduceMotion ? 0 : 0.6, ease: easeInOut, delay: reduceMotion ? 0 : 0.08 }}
         >
           <img className="w-full h-full max-w-[400px] object-cover" src={heroProf.src} alt="Mohammed Midilaj" />
         </motion.div>
